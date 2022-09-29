@@ -11,7 +11,7 @@ pipeline {
       parallel {
         stage('Build') {
           steps {
-            sh 'npm build'
+            sh 'npm run build'
           }
         }
 
@@ -45,7 +45,7 @@ export SONAR_SCANNER_OPTS="-server"'''
       }
     }
 
-    stage('error') {
+    stage('Success') {
       steps {
         echo 'Success'
       }
