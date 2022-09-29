@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    node {
-      label 'NodeJS'
-    }
-
-  }
+  agent any
   stages {
     stage('Install') {
       steps {
@@ -50,7 +45,7 @@ export SONAR_SCANNER_OPTS="-server"'''
       }
     }
 
-    stage('') {
+    stage('error') {
       steps {
         echo 'Success'
       }
