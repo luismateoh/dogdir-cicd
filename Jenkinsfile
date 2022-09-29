@@ -24,7 +24,7 @@ pipeline {
       }
     }
 
-stage('SonarQube analysis') {
+    stage('SonarQube analysis') {
       steps {
         script {
           def scannerHome = tool 'sonarscan';
@@ -32,9 +32,11 @@ stage('SonarQube analysis') {
             sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
           }
         }
+
       }
     }
-    stage("Quality gate") {
+
+    stage('Quality gate') {
       steps {
         script {
           def qualitygate = waitForQualityGate()
@@ -43,6 +45,7 @@ stage('SonarQube analysis') {
             waitForQualityGate abortPipeline: true
           }
         }
+
       }
     }
 
