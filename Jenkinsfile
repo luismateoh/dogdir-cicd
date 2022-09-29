@@ -26,8 +26,6 @@ pipeline {
 
     stage('Sonar Scanner') {
       steps {
-        sh 'npm run sonar'
-        waitForQualityGate true
         withSonarQubeEnv('Sonar Scanner CLI') {
           sh '''export SONAR_SCANNER_VERSION=4.7.0.2747
 export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
@@ -42,6 +40,7 @@ export SONAR_SCANNER_OPTS="-server"'''
   -Dsonar.host.url=https://sonarcloud.io'''
         }
 
+        waitForQualityGate true
       }
     }
 
