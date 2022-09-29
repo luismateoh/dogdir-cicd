@@ -27,8 +27,9 @@ pipeline {
     stage('SonarQube analysis') {
       steps {
         script {
+          def scannerHome = tool 'sonar-scanner ';
           withSonarQubeEnv('SonarCloud') {
-            sh "sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
           }
         }
 
