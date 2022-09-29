@@ -24,21 +24,25 @@ pipeline {
       }
     }
 
-    stage('build && SonarQube analysis') {
+stage('SonarQube analysis') {
       steps {
-        withSonarQubeEnv('My SonarQube Server') {
-          sh 'npm run sonar'
+        script {
+          def scannerHome = tool 'sonarscan';
+          withSonarQubeEnv('sonarqube') {
+            sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=reactapp -Dsonar.projectName=reactapp"
+          }
         }
-
       }
     }
-
-    stage('Quality Gate') {
+    stage("Quality gate") {
       steps {
-        timeout(time: 1, unit: 'HOURS') {
-          waitForQualityGate true
+        script {
+          def qualitygate = waitForQualityGate()
+          sleep(10)
+          if (qualitygate.status != "OK") {
+            waitForQualityGate abortPipeline: true
+          }
         }
-
       }
     }
 
