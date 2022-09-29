@@ -28,7 +28,7 @@ stage('SonarQube analysis') {
       steps {
         script {
           def scannerHome = tool 'sonarscan';
-          withSonarQubeEnv('sonarqube') {
+          withSonarQubeEnv('SonarCloud') {
             sh "${tool("sonarscan ")}/bin/sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
           }
         }
