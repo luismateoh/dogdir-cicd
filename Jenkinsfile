@@ -24,22 +24,25 @@ pipeline {
       }
     }
 
-    stage('Sonar Scanner') {
-      steps {
-        sh '''export SONAR_SCANNER_VERSION=4.7.0.2747
-export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
-curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
-unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-export PATH=$SONAR_SCANNER_HOME/bin:$PATH
-export SONAR_SCANNER_OPTS="-server"'''
-        sh '''sonar-scanner \\
-  -Dsonar.organization=luismateoh \\
-  -Dsonar.projectKey=luismateoh_dogdir-cicd \\
-  -Dsonar.sources=. \\
-  -Dsonar.host.url=https://sonarcloud.io'''
-        waitForQualityGate true
-      }
-    }
+    stage('build && SonarQube analysis') {
+            steps {
+                withSonarQubeEnv('My SonarQube Server') {
+                    // Optionally use a Maven environment you've configured already
+                    withMaven(maven:'Maven 3.5') {
+                        sh 'mvn clean package sonar:sonar'
+                    }
+                }
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time: 1, unit: 'HOURS') {
+                    // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
+                    // true = set pipeline to UNSTABLE, false = don't
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
 
     stage('Success') {
       steps {
