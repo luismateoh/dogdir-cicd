@@ -25,11 +25,22 @@ pipeline {
     }
 
     stage('SonarQube analysis') {
-      steps {
-        script {
-          def scannerHome = tool 'sonar-scanner ';
-          withSonarQubeEnv('SonarCloud') {
-            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
+      parallel {
+        stage('SonarQube analysis') {
+          steps {
+            script {
+              def scannerHome = tool 'sonar-scanner ';
+              withSonarQubeEnv('SonarCloud') {
+                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
+              }
+            }
+
+          }
+        }
+
+        stage('') {
+          steps {
+            sh 'sonar-scanner'
           }
         }
 
