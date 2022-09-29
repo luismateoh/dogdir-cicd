@@ -29,7 +29,7 @@ pipeline {
         script {
           def scannerHome = tool 'sonarscan';
           withSonarQubeEnv('SonarCloud') {
-            sh "sonar-scanner -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
+            sh "${scannerHome}/bin/sonar-scanner-cli-4.7.0.2747 -Dsonar.projectKey=luismateoh_dogdir-cicd -Dsonar.organization=luismateoh"
           }
         }
 
